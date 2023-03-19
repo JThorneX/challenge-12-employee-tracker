@@ -178,7 +178,68 @@ function viewAllRoles() {
       });
   });
 }
-function addRole() {}
+function addRole() {
+  const newRole = [];
+  db.query("SELECT * FROM departments", (err, allDept) => {
+    allDept.forEach((dept) => {
+      const department = {
+        name: dept.name,
+        value: dept.id,
+      };
+      newRole.push(department);
+    });
+  });
+
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addedRole",
+        message: "Please enter in the title of the new role.",
+      },
+      {
+        type: "input",
+        name: "addedSalary",
+        message: "Please enter the salary for the new role.",
+      },
+      {
+        type: "list",
+        name: "roleDept",
+        message: "What department does the new role belong to?",
+        choices: roleDept,
+      },
+    ])
+    .then((options) => {
+      db.query(
+        `INSERT INTO employee_role (title, salary, department_id) VALUES (?, ?, ?)`,
+        [[options.addedRole, options.addedSalary, options.roleDept]],
+        (err, results) => {
+          console.log(
+            "Successfully added " +
+              options.addedRole +
+              " to the employee tracker database."
+          );
+          viewAllRoles();
+        }
+      );
+    });
+  inquirer
+    .prompt({
+      type: "list",
+      name: "choice",
+      message: "Go back?",
+      choices: ["Main Menu", "Quit"],
+    })
+    .then((results) => {
+      switch (results.choice) {
+        case "Main Menu":
+          startProcess();
+          break;
+        case "Quit":
+          break;
+      }
+    });
+}
 function viewAllDepartments() {
   db.query("SELECT * FROM departments", function (err, results) {
     if (err) throw err;
