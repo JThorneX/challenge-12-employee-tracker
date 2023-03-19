@@ -37,3 +37,20 @@ CREATE TABLE employees (
     FOREIGN KEY (manager_id)
     REFERENCES employees(id)
 );
+
+inquirer
+      .prompt({
+        type: "list",
+        name: "choice",
+        message: "Go back?",
+        choices: ["Main Menu", "Quit"],
+      })
+      .then((results) => {
+        switch (results.choice) {
+          case "Main Menu":
+            startProcess();
+            break;
+          case "Quit":
+            break;
+        }
+      });

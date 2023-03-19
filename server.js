@@ -67,12 +67,25 @@ function startProcess() {
 }
 
 function viewEmployees() {
-  db.query("SELECT name FROM departments ORDER BY id", function (err, results) {
-    if (err) {
-      console.log(err);
-    }
+  db.query("SELECT * FROM employees", function (err, results) {
+    if (err) throw err;
     console.table(results);
-    startProcess();
+    inquirer
+      .prompt({
+        type: "list",
+        name: "choice",
+        message: "Go back?",
+        choices: ["Main Menu", "Quit"],
+      })
+      .then((results) => {
+        switch (results.choice) {
+          case "Main Menu":
+            startProcess();
+            break;
+          case "Quit":
+            break;
+        }
+      });
   });
 }
 
@@ -124,12 +137,105 @@ function addEmployee() {
         }
       );
     });
+    inquirer
+      .prompt({
+        type: "list",
+        name: "choice",
+        message: "Go back?",
+        choices: ["Main Menu", "Quit"],
+      })
+      .then((results) => {
+        switch (results.choice) {
+          case "Main Menu":
+            startProcess();
+            break;
+          case "Quit":
+            break;
+        }
+      });
   });
 }
 function updateEmployeeRole() {}
-function viewAllRoles() {}
+function viewAllRoles() {
+  db.query("SELECT * FROM employee_role", function (err, results) {
+    if (err) throw err;
+    console.table(results);
+    inquirer
+      .prompt({
+        type: "list",
+        name: "choice",
+        message: "Go back?",
+        choices: ["Main Menu", "Quit"],
+      })
+      .then((results) => {
+        switch (results.choice) {
+          case "Main Menu":
+            startProcess();
+            break;
+          case "Quit":
+            break;
+        }
+      });
+  });
+}
 function addRole() {}
-function viewAllDepartments() {}
-function addDepartment() {}
+function viewAllDepartments() {
+  db.query("SELECT * FROM departments", function (err, results) {
+    if (err) throw err;
+    console.table(results);
+    inquirer
+      .prompt({
+        type: "list",
+        name: "choice",
+        message: "Go back?",
+        choices: ["Main Menu", "Quit"],
+      })
+      .then((results) => {
+        switch (results.choice) {
+          case "Main Menu":
+            startProcess();
+            break;
+          case "Quit":
+            break;
+        }
+      });
+  });
+}
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Type the new department name",
+        name: "newDepartment",
+      },
+    ])
+    .then(function (answer) {
+      db.query(
+        "INSERT INTO departments(name) VALUES(?)",
+        [answer.newDepartment],
+        function (err, answer) {
+          if (err) throw err;
+          console.table(answer);
+        }
+      );
+    });
+  inquirer
+    .prompt({
+      type: "list",
+      name: "choice",
+      message: "Go back?",
+      choices: ["Main Menu", "Quit"],
+    })
+    .then((results) => {
+      switch (results.choice) {
+        case "Main Menu":
+          startProcess();
+          break;
+        case "Quit":
+          break;
+      }
+    });
+}
 
 init();
