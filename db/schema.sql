@@ -6,65 +6,34 @@
 -- add an employee, and 
 -- update an employee role
 
-DROP DATABASE IF EXISTS employee_tracker_db;
-CREATE DATABASE employee_tracker_db;
+DROP DATABASE IF EXISTS employeetracker_db;
+CREATE DATABASE employeetracker_db;
+
+USE employeetracker_db;
 
 
-CREATE TABLE department (
-  id INT AUTO_INCREMENT NOT NULL,
-  name VARCHAR(30) NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE departments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE employee_role (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(30) NOT NULL,
-  salary INT,
+  salary INT NOT NULL,
+  department_id INT NOT NULL,
   FOREIGN KEY (department_id) 
-  REFERENCES department(id)
-  ON DELETE SET NULL
+  REFERENCES departments(id)
 );
 
-
-
-CREATE TABLE manager_id (
-    first_name VARCHAR(15) NOT NULL,
-    last_name VARCHAR(30) NOT NULL
-   -- FOREIGN KEY (department_id) 
-   -- REFERENCES department(id)
-);
-
-CREATE TABLE employee_id (
-    first_name VARCHAR(15) NOT NULL,
-    last_name VARCHAR(30) NOT NULL
-   -- employee_role_id INT NOT NULL,
-    -- manager_id INT
-);
-
-
-
-
-
-
-
-
-CREATE TABLE manager_id (
+CREATE TABLE employees (
+	id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(15) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    FOREIGN KEY (department_id) 
-    REFERENCES department(id)
+    employee_id INT NOT NULL,
+    FOREIGN KEY (employee_id)
+    REFERENCES employee_role(id),
+    manager_id INT,
+    FOREIGN KEY (manager_id)
+    REFERENCES employees(id)
 );
-
-CREATE TABLE employee_id (
-    first_name VARCHAR(15) NOT NULL,
-    last_name VARCHAR(30) NOT NULL,
-    employee_role_id INT NOT NULL,
-    manager_id INT
-);
-
-  FOREIGN KEY (instructor_id)
-  //this tells the foreign key where to reference its value
-  REFERENCES instructors(id)
-  ON DELETE SET NULL
-
-
-  department_id TEXT,
