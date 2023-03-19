@@ -66,4 +66,70 @@ function startProcess() {
     });
 }
 
+function viewEmployees() {
+  db.query("SELECT name FROM departments ORDER BY id", function (err, results) {
+    if (err) {
+      console.log(err);
+    }
+    console.table(results);
+    startProcess();
+  });
+}
+
+function addEmployee() {
+  db.query("SELECT * FROM employees", (err, employees) => {
+    const newEmployee = [{ name: "", value: 0 }];
+
+    employees.forEach(({ first_name, last_name, id }) => {
+      newEmployee.push({
+        name: first_name + last_name,
+        value: id,
+      });
+    });
+
+    db.query("SELECT * FROM employee_role", (err, employee_role) => {
+      const newEmployeeRole = [];
+      employee_role.forEach(({ title, id }) => {
+        newEmployeeRole.push({
+          name: title,
+          value: id,
+        });
+      });
+
+      inquirer.prompt([
+        {
+          type: "input",
+          name: "first_name, last_name",
+          message: "What is the new employee's name?",
+        },
+        {
+          type: "list",
+          name: "employeeRole",
+          message: "What is the new employee's role?",
+          choices: newEmployeeRole,
+        },
+      ]);
+    }).then((options) => {
+      const newEmployee = [options.first_name, options.last_name];
+      db.query(
+        `INSERT INTO employees (first_name, last_name, employee_id) VALUES (?, ?, ?)`,
+        [[options.firstname, options.lastname, options.employeeRole]],
+        (err, results) => {
+          console.log(
+            "Successfully added " +
+              newEmployee +
+              " to the employee tracker database."
+          );
+          viewEmployees();
+        }
+      );
+    });
+  });
+}
+function updateEmployeeRole() {}
+function viewAllRoles() {}
+function addRole() {}
+function viewAllDepartments() {}
+function addDepartment() {}
+
 init();
