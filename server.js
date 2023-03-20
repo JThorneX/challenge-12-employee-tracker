@@ -155,7 +155,45 @@ function addEmployee() {
       });
   });
 }
-function updateEmployeeRole() {}
+function updateEmployeeRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "employeeId",
+        message: "Enter the ID of the employee you would like to update",
+      },
+      {
+        type: "input",
+        name: "roleId",
+        message: "Enter the ID of the new role for the employee",
+      },
+    ])
+    .then((options) => {
+      const updateRole = `UPDATE employees SET employee_id = ? WHERE id = ?`;
+      const updatedEmployee = [options.employee_id, options.id];
+      db.query(updateRole, updatedEmployee, (err, results) => {
+        if (err) throw err;
+        console.log("Successfully employee information.");
+        inquirer
+          .prompt({
+            type: "list",
+            name: "choice",
+            message: "Go back?",
+            choices: ["Main Menu", "Quit"],
+          })
+          .then((results) => {
+            switch (results.choice) {
+              case "Main Menu":
+                startProcess();
+                break;
+              case "Quit":
+                break;
+            }
+          });
+      });
+    });
+}
 function viewAllRoles() {
   db.query("SELECT * FROM employee_role", function (err, results) {
     if (err) throw err;
