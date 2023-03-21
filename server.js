@@ -1,22 +1,27 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
 const consoleTable = require("console.table");
 const mysql = require("mysql2");
 
-const db = mysql.createConnection(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: "localhost",
-    dialect: "mysql",
-    port: 3306,
-  }
-);
+// const db = mysql.createConnection(
+//   process.env.DB_NAME,
+//   process.env.DB_USER,
+//   process.env.DB_PASSWORD,
+//   {
+//     host: "localhost",
+//     dialect: "mysql",
+//     port: 3306,
+//   }
+// );
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "employeetracker_db",
+});
 
-function init() {
+db.connect(async function () {
   startProcess();
-}
+});
 
 function startProcess() {
   inquirer
@@ -61,7 +66,7 @@ function startProcess() {
           addDepartment();
           break;
         case "Quit":
-          break;
+          process.exit;
       }
     });
 }
@@ -336,5 +341,3 @@ function addDepartment() {
       }
     });
 }
-
-init();
